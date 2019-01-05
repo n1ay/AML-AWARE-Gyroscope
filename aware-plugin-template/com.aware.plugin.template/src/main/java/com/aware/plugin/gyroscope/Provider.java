@@ -22,21 +22,21 @@ import java.util.HashMap;
 
 public class Provider extends ContentProvider {
 
-    public static String AUTHORITY = "com.aware.plugin.template.provider.xxx"; //change to package.provider.your_plugin_name
+    public static String AUTHORITY = "com.aware.plugin.gyroscope.provider.gyroscope_plugin"; //change to package.provider.your_plugin_name
 
     public static final int DATABASE_VERSION = 1; //increase this if you make changes to the database structure, i.e., rename columns, etc.
-    public static final String DATABASE_NAME = "plugin_template.db"; //the database filename, use plugin_xxx for plugins.
+    public static final String DATABASE_NAME = "plugin_gyroscope.db"; //the database filename, use plugin_xxx for plugins.
 
     //Add here your database table names, as many as you need
-    public static final String DB_TBL_TEMPLATE = "table_one";
+    public static final String DB_TBL_GYROSCOPE_PLUGIN = "table_gyroscope_plugin";
 
     //For each table, add two indexes: DIR and ITEM. The index needs to always increment. Next one is 3, and so on.
-    private static final int TABLE_ONE_DIR = 1;
-    private static final int TABLE_ONE_ITEM = 2;
+    private static final int TABLE_GYROSCOPE_PLUGIN_DIR = 1;
+    private static final int TABLE_GYROSCOPE_PLUGIN_ITEM = 2;
 
     //Put tables names in this array so AWARE knows what you have on the database
     public static final String[] DATABASE_TABLES = {
-        DB_TBL_TEMPLATE
+            DB_TBL_GYROSCOPE_PLUGIN
     };
 
     //These are columns that we need to sync data, don't change this!
@@ -50,31 +50,34 @@ public class Provider extends ContentProvider {
      * Create one of these per database table
      * In this example, we are adding example columns
      */
-    public static final class TableOne_Data implements AWAREColumns {
-        public static final Uri CONTENT_URI = Uri.parse("content://" + AUTHORITY + "/" + DB_TBL_TEMPLATE);
-        public static final String CONTENT_TYPE = ContentResolver.CURSOR_DIR_BASE_TYPE + "/vnd.com.aware.plugin.template.provider.table_one"; //modify me
-        public static final String CONTENT_ITEM_TYPE = ContentResolver.CURSOR_ITEM_BASE_TYPE + "/vnd.com.aware.plugin.template.provider.table_one"; //modify me
+    public static final class Table_Gyroscope_Plugin_Data implements AWAREColumns {
+        public static final Uri CONTENT_URI = Uri.parse("content://" + AUTHORITY + "/" + DB_TBL_GYROSCOPE_PLUGIN);
+        public static final String CONTENT_TYPE = ContentResolver.CURSOR_DIR_BASE_TYPE + "/vnd.com.aware.plugin.provider." + DB_TBL_GYROSCOPE_PLUGIN;
+        public static final String CONTENT_ITEM_TYPE = ContentResolver.CURSOR_ITEM_BASE_TYPE + "/vnd.com.aware.plugin.provider." + DB_TBL_GYROSCOPE_PLUGIN;
 
         //Note: integers and strings don't need a type prefix_
-        public static final String NAME = "name";
-        public static final String BIG_NUMBER = "double_big_number"; //a double_ prefix makes a MySQL DOUBLE column
-        public static final String PICTURE = "blob_picture"; //a blob_ prefix makes a MySQL BLOB column
+        //public static final String NAME = "name";
+        //public static final String BIG_NUMBER = "double_big_number"; //a double_ prefix makes a MySQL DOUBLE column
+        //public static final String PICTURE = "blob_picture"; //a blob_ prefix makes a MySQL BLOB column
+        public static final String X_ROTATION = "double_values_0";
+        public static final String Y_ROTATION = "double_values_1";
+        public static final String Z_ROTATION = "double_values_2";
     }
 
     //Define each database table fields
-    private static final String DB_TBL_TEMPLATE_FIELDS =
-        TableOne_Data._ID + " integer primary key autoincrement," +
-        TableOne_Data.TIMESTAMP + " real default 0," +
-        TableOne_Data.DEVICE_ID + " text default ''," +
-        TableOne_Data.NAME + " text default ''," +
-        TableOne_Data.BIG_NUMBER + " real default 0," +
-        TableOne_Data.PICTURE + " blob default null";
+    private static final String DB_TBL_GYROSCOPE_PLUGIN_FIELDS =
+        Table_Gyroscope_Plugin_Data._ID + " integer primary key autoincrement," +
+        Table_Gyroscope_Plugin_Data.TIMESTAMP + " real default 0," +
+        Table_Gyroscope_Plugin_Data.DEVICE_ID + " text default ''," +
+        Table_Gyroscope_Plugin_Data.X_ROTATION + " real default 0," +
+        Table_Gyroscope_Plugin_Data.Y_ROTATION + " real default 0," +
+        Table_Gyroscope_Plugin_Data.Z_ROTATION + " real default 0";
 
     /**
      * Share the fields with AWARE so we can replicate the table schema on the server
      */
     public static final String[] TABLES_FIELDS = {
-            DB_TBL_TEMPLATE_FIELDS
+            DB_TBL_GYROSCOPE_PLUGIN_FIELDS
     };
 
     //Helper variables for ContentProvider - DO NOT CHANGE
@@ -90,14 +93,14 @@ public class Provider extends ContentProvider {
     //--
 
     //For each table, create a hashmap needed for database queries
-    private HashMap<String, String> tableOneHash;
+    private HashMap<String, String> tableGyroscopePluginHash;
 
     /**
      * Returns the provider authority that is dynamic
      * @return
      */
     public static String getAuthority(Context context) {
-        AUTHORITY = context.getPackageName() + ".provider.xxx";
+        AUTHORITY = context.getPackageName() + ".provider.gyroscope_plugin";
         return AUTHORITY;
     }
 
@@ -109,17 +112,17 @@ public class Provider extends ContentProvider {
         sUriMatcher = new UriMatcher(UriMatcher.NO_MATCH);
 
         //For each table, add indexes DIR and ITEM
-        sUriMatcher.addURI(AUTHORITY, DATABASE_TABLES[0], TABLE_ONE_DIR);
-        sUriMatcher.addURI(AUTHORITY, DATABASE_TABLES[0] + "/#", TABLE_ONE_ITEM);
+        sUriMatcher.addURI(AUTHORITY, DATABASE_TABLES[0], TABLE_GYROSCOPE_PLUGIN_DIR);
+        sUriMatcher.addURI(AUTHORITY, DATABASE_TABLES[0] + "/#", TABLE_GYROSCOPE_PLUGIN_ITEM);
 
         //Create each table hashmap so Android knows how to insert data to the database. Put ALL table fields.
-        tableOneHash = new HashMap<>();
-        tableOneHash.put(TableOne_Data._ID, TableOne_Data._ID);
-        tableOneHash.put(TableOne_Data.TIMESTAMP, TableOne_Data.TIMESTAMP);
-        tableOneHash.put(TableOne_Data.DEVICE_ID, TableOne_Data.DEVICE_ID);
-        tableOneHash.put(TableOne_Data.NAME, TableOne_Data.NAME);
-        tableOneHash.put(TableOne_Data.BIG_NUMBER, TableOne_Data.BIG_NUMBER);
-        tableOneHash.put(TableOne_Data.PICTURE, TableOne_Data.PICTURE);
+        tableGyroscopePluginHash = new HashMap<>();
+        tableGyroscopePluginHash.put(Table_Gyroscope_Plugin_Data._ID, Table_Gyroscope_Plugin_Data._ID);
+        tableGyroscopePluginHash.put(Table_Gyroscope_Plugin_Data.TIMESTAMP, Table_Gyroscope_Plugin_Data.TIMESTAMP);
+        tableGyroscopePluginHash.put(Table_Gyroscope_Plugin_Data.DEVICE_ID, Table_Gyroscope_Plugin_Data.DEVICE_ID);
+        tableGyroscopePluginHash.put(Table_Gyroscope_Plugin_Data.X_ROTATION, Table_Gyroscope_Plugin_Data.X_ROTATION);
+        tableGyroscopePluginHash.put(Table_Gyroscope_Plugin_Data.Y_ROTATION, Table_Gyroscope_Plugin_Data.Y_ROTATION);
+        tableGyroscopePluginHash.put(Table_Gyroscope_Plugin_Data.Z_ROTATION, Table_Gyroscope_Plugin_Data.Z_ROTATION);
 
         return true;
     }
@@ -134,7 +137,7 @@ public class Provider extends ContentProvider {
         switch (sUriMatcher.match(uri)) {
 
             //Add each table DIR case, increasing the index accordingly
-            case TABLE_ONE_DIR:
+            case TABLE_GYROSCOPE_PLUGIN_DIR:
                 count = database.delete(DATABASE_TABLES[0], selection, selectionArgs);
                 break;
 
@@ -163,12 +166,12 @@ public class Provider extends ContentProvider {
         switch (sUriMatcher.match(uri)) {
 
             //Add each table DIR case
-            case TABLE_ONE_DIR:
-                long _id = database.insert(DATABASE_TABLES[0], TableOne_Data.DEVICE_ID, values);
+            case TABLE_GYROSCOPE_PLUGIN_DIR:
+                long _id = database.insert(DATABASE_TABLES[0], Table_Gyroscope_Plugin_Data.DEVICE_ID, values);
                 database.setTransactionSuccessful();
                 database.endTransaction();
                 if (_id > 0) {
-                    Uri dataUri = ContentUris.withAppendedId(TableOne_Data.CONTENT_URI, _id);
+                    Uri dataUri = ContentUris.withAppendedId(Table_Gyroscope_Plugin_Data.CONTENT_URI, _id);
                     getContext().getContentResolver().notifyChange(dataUri, null);
                     return dataUri;
                 }
@@ -190,9 +193,9 @@ public class Provider extends ContentProvider {
         switch (sUriMatcher.match(uri)) {
 
             //Add all tables' DIR entries, with the right table index
-            case TABLE_ONE_DIR:
+            case TABLE_GYROSCOPE_PLUGIN_DIR:
                 qb.setTables(DATABASE_TABLES[0]);
-                qb.setProjectionMap(tableOneHash); //the hashmap of the table
+                qb.setProjectionMap(tableGyroscopePluginHash); //the hashmap of the table
                 break;
 
             default:
@@ -218,10 +221,10 @@ public class Provider extends ContentProvider {
         switch (sUriMatcher.match(uri)) {
 
             //Add each table indexes DIR and ITEM
-            case TABLE_ONE_DIR:
-                return TableOne_Data.CONTENT_TYPE;
-            case TABLE_ONE_ITEM:
-                return TableOne_Data.CONTENT_ITEM_TYPE;
+            case TABLE_GYROSCOPE_PLUGIN_DIR:
+                return Table_Gyroscope_Plugin_Data.CONTENT_TYPE;
+            case TABLE_GYROSCOPE_PLUGIN_ITEM:
+                return Table_Gyroscope_Plugin_Data.CONTENT_ITEM_TYPE;
 
             default:
                 throw new IllegalArgumentException("Unknown URI " + uri);
@@ -239,7 +242,7 @@ public class Provider extends ContentProvider {
         switch (sUriMatcher.match(uri)) {
 
             //Add each table DIR case
-            case TABLE_ONE_DIR:
+            case TABLE_GYROSCOPE_PLUGIN_DIR:
                 count = database.update(DATABASE_TABLES[0], values, selection, selectionArgs);
                 break;
 

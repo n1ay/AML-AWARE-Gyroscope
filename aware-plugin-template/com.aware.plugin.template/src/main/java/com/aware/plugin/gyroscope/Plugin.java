@@ -3,16 +3,15 @@ package com.aware.plugin.gyroscope;
 import android.content.ContentResolver;
 import android.content.ContentValues;
 import android.content.Intent;
-import android.hardware.Sensor;
-import android.hardware.SensorManager;
 import android.os.Bundle;
+import android.support.design.widget.TabLayout;
 import android.util.Log;
 
-import com.aware.Accelerometer;
 import com.aware.Aware;
 import com.aware.Aware_Preferences;
 import com.aware.Gyroscope;
 import com.aware.Screen;
+import com.aware.providers.Gyroscope_Provider;
 import com.aware.utils.Aware_Plugin;
 
 public class Plugin extends Aware_Plugin {
@@ -77,6 +76,15 @@ public class Plugin extends Aware_Plugin {
                 public void onGyroscopeChanged(ContentValues data) {
                     data.put("label", "gyroscope");
                     sendBroadcast(new Intent("GYROSCOPE_DATA").putExtra("data", data));
+
+                    ContentValues gyroscope_data = new ContentValues();
+                    gyroscope_data.put(Provider.Table_Gyroscope_Plugin_Data.DEVICE_ID, Aware.getSetting(getApplicationContext(), Aware_Preferences.DEVICE_ID));
+                    gyroscope_data.put(Provider.Table_Gyroscope_Plugin_Data.TIMESTAMP, (long) data.get(Provider.Table_Gyroscope_Plugin_Data.TIMESTAMP));
+                    gyroscope_data.put(Provider.Table_Gyroscope_Plugin_Data.X_ROTATION, (float) data.get(Provider.Table_Gyroscope_Plugin_Data.X_ROTATION));
+                    gyroscope_data.put(Provider.Table_Gyroscope_Plugin_Data.Y_ROTATION, (float) data.get(Provider.Table_Gyroscope_Plugin_Data.Y_ROTATION));
+                    gyroscope_data.put(Provider.Table_Gyroscope_Plugin_Data.Z_ROTATION, (float) data.get(Provider.Table_Gyroscope_Plugin_Data.Z_ROTATION));
+
+                    getContentResolver().insert(Provider.Table_Gyroscope_Plugin_Data.CONTENT_URI, gyroscope_data);
                     Log.d("Gyroscope Plugin[DEBUG]", "Gyroscope: " + data);
                 }
             });
