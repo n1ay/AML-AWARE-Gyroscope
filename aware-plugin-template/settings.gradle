@@ -1,0 +1,2 @@
+include ':com.aware.plugin.template'
+//, ':com.aware.plugin.template.lib'

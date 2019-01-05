@@ -1,0 +1,4 @@
+<resources>
+    <string name="app_name">AWARE: Gyroscope Plugin</string>
+    <string name="plugin_template">Plugin: Gyroscope</string>
+</resources>
