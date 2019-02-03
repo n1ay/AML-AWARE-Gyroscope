@@ -56,4 +56,6 @@ dependencies {
 
     api "com.github.denzilferreira:aware-client:4.0.711"
 
+    implementation 'com.jjoe64:graphview:4.2.2'
+
 }

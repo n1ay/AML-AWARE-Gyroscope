@@ -7,7 +7,12 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:textAppearance="?android:attr/textAppearanceLarge"
-        android:text="Hello Android!"
+        android:text=""
         android:id="@+id/aware_stream_text_view"
         android:textColor="#000"/>
+    <com.jjoe64.graphview.GraphView
+        android:padding="20dip"
+        android:layout_width="match_parent"
+        android:layout_height="200dip"
+        android:id="@+id/graph" />
 </LinearLayout>

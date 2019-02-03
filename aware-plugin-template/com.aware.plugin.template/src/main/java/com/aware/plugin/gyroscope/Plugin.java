@@ -16,6 +16,10 @@ import com.aware.utils.Aware_Plugin;
 
 public class Plugin extends Aware_Plugin {
 
+    private static final int UPDATE_GRAPH_PERIOD_SECONDS = 10;
+    private static final int GYROSCOPE_CHANGED_LIMIT = 5 * UPDATE_GRAPH_PERIOD_SECONDS;
+    private int gyroscopeChangedCounter = 0;
+
     @Override
     public void onCreate() {
         super.onCreate();
@@ -86,6 +90,13 @@ public class Plugin extends Aware_Plugin {
 
                     getContentResolver().insert(Provider.Table_Gyroscope_Plugin_Data.CONTENT_URI, gyroscope_data);
                     Log.d("Gyroscope Plugin[DEBUG]", "Gyroscope: " + data);
+
+                    if (gyroscopeChangedCounter >= GYROSCOPE_CHANGED_LIMIT) {
+                        gyroscopeChangedCounter = 0;
+                        sendBroadcast(new Intent("UPDATE_GRAPH"));
+                    } else {
+                        gyroscopeChangedCounter++;
+                    }
                 }
             });
 
